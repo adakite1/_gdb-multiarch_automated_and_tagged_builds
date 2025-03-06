@@ -7,6 +7,8 @@ sudo apt-get update && sudo apt-get install -y --no-install-recommends \
 
 # Cross-compile libGMP for Windows with MinGW-w64
 mkdir -p /tmp/build/gmp && cd /tmp/build/gmp && \
+	CC_FOR_BUILD="x86_64-linux-gnu-gcc" \
+    CPP_FOR_BUILD="x86_64-linux-gnu-cpp" \
 	"/tmp/src/gmp-${GMP_VERSION}/configure" \
 		--prefix=/tmp/install/gmp \
 		--host=x86_64-w64-mingw32 \
@@ -17,6 +19,8 @@ cd /tmp/build/gmp && make install
 
 # Cross-compile libMPFR for Windows with MinGW-w64
 mkdir -p /tmp/build/mpfr && cd /tmp/build/mpfr && \
+	CC_FOR_BUILD="x86_64-linux-gnu-gcc" \
+    CPP_FOR_BUILD="x86_64-linux-gnu-cpp" \
 	"/tmp/src/mpfr-${MPFR_VERSION}/configure" \
 		--prefix=/tmp/install/mpfr \
 		--with-gmp=/tmp/install/gmp \
@@ -33,6 +37,8 @@ cd /tmp/build/mpfr && make install
 # - https://github.com/msys2/MINGW-packages/blob/master/mingw-w64-gdb/PKGBUILD)
 mkdir -p /tmp/build/gdb && cd /tmp/build/gdb && \
 	CFLAGS="-O2 -g" CXXFLAGS="-O2 -g" \
+	CC_FOR_BUILD="x86_64-linux-gnu-gcc" \
+    CPP_FOR_BUILD="x86_64-linux-gnu-cpp" \
 	"/tmp/src/gdb-${GDB_VERSION}/configure" \
 		--prefix=/tmp/install/gdb \
 		--host=x86_64-w64-mingw32 \
