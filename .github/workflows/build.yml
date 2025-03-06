@@ -15,7 +15,7 @@ jobs:
     strategy:
       matrix:
         config:
-          - { name: "Linux/Windows", os: "ubuntu-latest", path: "linux" }
+          - { name: "Linux/Windows", os: "ubuntu-22.04", path: "linux" }
           - { name: "macOS", os: "macos-latest", path: "mac" }
 
     steps:
@@ -48,6 +48,13 @@ jobs:
       with:
         name: gdb-macos
         path: ${{ matrix.config.path }}/gdb-*-mac.zip
+    
+    - name: Upload macOS Build (Intel)
+      if: matrix.config.name == 'macOS'
+      uses: actions/upload-artifact@v4
+      with:
+        name: gdb-macos
+        path: ${{ matrix.config.path }}/gdb-*-intel-mac.zip
 
     - name: Create Release
       if: startsWith(github.ref, 'refs/tags/')
