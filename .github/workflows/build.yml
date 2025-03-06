@@ -1,0 +1,58 @@
+name: Build GDB
+
+on:
+  push:
+    tags:
+      - '*'
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build:
+    name: Build GDB for ${{ matrix.config.name }}
+    runs-on: ${{ matrix.config.os }}
+    strategy:
+      matrix:
+        config:
+          - { name: "Linux/Windows", os: "ubuntu-latest", path: "linux" }
+          - { name: "macOS", os: "macos-latest", path: "mac" }
+
+    steps:
+    - uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+        fetch-tags: true
+
+    - name: Build GDB
+      working-directory: ${{ matrix.config.path }}
+      run: ./build.sh
+
+    - name: Upload Linux Build
+      if: matrix.config.name == 'Linux/Windows'
+      uses: actions/upload-artifact@v4
+      with:
+        name: gdb-linux
+        path: ${{ matrix.config.path }}/gdb-*-linux.zip
+
+    - name: Upload Windows Build  
+      if: matrix.config.name == 'Linux/Windows'
+      uses: actions/upload-artifact@v4
+      with:
+        name: gdb-windows
+        path: ${{ matrix.config.path }}/gdb-*-mingw64.zip
+
+    - name: Upload macOS Build
+      if: matrix.config.name == 'macOS'
+      uses: actions/upload-artifact@v4
+      with:
+        name: gdb-macos
+        path: ${{ matrix.config.path }}/gdb-*-mac.zip
+
+    - name: Create Release
+      if: startsWith(github.ref, 'refs/tags/')
+      uses: softprops/action-gh-release@v2
+      with:
+        name: ${{ github.ref_name }}
+        files: |
+          ${{ matrix.config.path }}/gdb-*.zip
