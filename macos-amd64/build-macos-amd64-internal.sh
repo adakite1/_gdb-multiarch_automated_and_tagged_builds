@@ -21,8 +21,10 @@ cd /tmp/build/mpfr && make install
 
 # Compile GDB
 mkdir -p /tmp/build/gdb && cd /tmp/build/gdb && \
-	CFLAGS="-O2 -g" CXXFLAGS="-O2 -g" \
+	CFLAGS="-O2 -g" CXXFLAGS="-O2 -g" LDFLAGS="-static" \
 	"/tmp/src/gdb-${GDB_VERSION}/configure" \
+		LDFLAGS="-static -L/opt/local/lib" \
+		LIBS="-lzstd -llzma -lintl" \
 		--prefix=/tmp/install/gdb \
 		--enable-targets=all \
 		--target=arm-none-eabi \
