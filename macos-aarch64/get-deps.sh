@@ -14,8 +14,11 @@ brew install \
     libmpc \
     isl \
     zstd \
-    xz
+    xz \
+    gettext
 brew reinstall --build-from-source zstd
+brew reinstall --build-from-source xz
+brew reinstall --build-from-source gettext
 
 # Note: build-essential, ca-certificates, and libc6-dev are not needed 
 # as they're part of Xcode Command Line Tools

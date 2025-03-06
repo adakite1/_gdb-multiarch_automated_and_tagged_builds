@@ -14,7 +14,8 @@ brew install \
     libmpc \
     isl \
     zstd \
-    xz
+    xz \
+    gettext
 brew reinstall --build-from-source zstd
 brew reinstall --build-from-source xz
 brew reinstall --build-from-source gettext
