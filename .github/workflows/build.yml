@@ -86,10 +86,6 @@ jobs:
           ls
         
           # Extract both zip files
-          unzip gdb-macos-amd64.zip
-          unzip gdb-macos-aarch64.zip
-
-          # Extract again
           unzip gdb-*-macos-amd64.zip
           mv gdb gdb-amd64
           unzip -o gdb-*-macos-aarch64.zip
