@@ -16,7 +16,7 @@ jobs:
       matrix:
         config:
           - { name: "Linux/Windows", os: "ubuntu-22.04", path: "linux" }
-          - { name: "macOS (amd64)", os: "macos-latest-large", path: "mac" }
+          - { name: "macOS (amd64)", os: "macos-13", path: "mac" }
           - { name: "macOS (aarch64)", os: "macos-latest", path: "mac" }
 
     steps:
