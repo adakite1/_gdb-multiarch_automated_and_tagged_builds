@@ -1,13 +1,16 @@
-FROM ubuntu:20.04
+FROM ubuntu:24.04
 
 # The number of CPU cores to use when performing compilation
 ARG CPU_CORES=8
 
 # The version of libGMP that we will build
-ARG GMP_VERSION=6.2.1
+ARG GMP_VERSION=6.3.0
+
+# The version of libMPFR that we will build
+ARG MPFR_VERSION=4.2.1
 
 # The version of GDB that we will build
-ARG GDB_VERSION=11.2
+ARG GDB_VERSION=16.2
 
 # Install our build dependencies
 RUN rm -f /etc/apt/apt.conf.d/docker-clean; echo 'Binary::apt::APT::Keep-Downloaded-Packages "true";' > /etc/apt/apt.conf.d/keep-cache
@@ -20,10 +23,20 @@ RUN --mount=type=cache,target=/var/cache/apt --mount=type=cache,target=/var/lib/
 		curl \
 		mingw-w64 \
 		tar \
-		zip
+		zip \
+		texinfo \
+        flex \
+        bison \
+        mingw-w64-tools \
+        libiconv-hook-dev \
+		libc6-dev
 
 # Create a non-root user and perform all build steps as this user (this simplifies things a little when later copying files out of the container image)
-RUN useradd --create-home --home /home/nonroot --shell /bin/bash --uid 1000 nonroot
+ARG USERNAME=nonroot
+ARG USER_UID=1001
+ARG USER_GID=$USER_UID
+RUN groupadd --gid $USER_GID $USERNAME \
+    && useradd --uid $USER_UID --gid $USER_GID -m $USERNAME
 USER nonroot
 
 # Download and extract the source code for libGMP
@@ -31,14 +44,33 @@ RUN mkdir /tmp/src
 RUN curl -fSL "https://gmplib.org/download/gmp/gmp-${GMP_VERSION}.tar.xz" -o "/tmp/gmp-${GMP_VERSION}.tar.xz" && \
 	tar xvf "/tmp/gmp-${GMP_VERSION}.tar.xz" --directory /tmp/src
 
+# Download and extract the soruce code for libMPFR
+RUN curl -fSL "https://www.mpfr.org/mpfr-current/mpfr-${MPFR_VERSION}.tar.xz" -o "/tmp/mpfr-${MPFR_VERSION}.tar.xz" && \
+	tar xvf "/tmp/mpfr-${MPFR_VERSION}.tar.xz" --directory /tmp/src
+
 # Download and extract the source code for GDB
 RUN curl -fSL "https://ftp.gnu.org/gnu/gdb/gdb-${GDB_VERSION}.tar.gz" -o "/tmp/gdb-${GDB_VERSION}.tar.gz" && \
 	tar xvf "/tmp/gdb-${GDB_VERSION}.tar.gz" --directory /tmp/src
 
 # Cross-compile libGMP for Windows with MinGW-w64
 RUN mkdir -p /tmp/build/gmp && cd /tmp/build/gmp && \
+	CC_FOR_BUILD="x86_64-linux-gnu-gcc" \
+    CPP_FOR_BUILD="x86_64-linux-gnu-cpp" \
 	"/tmp/src/gmp-${GMP_VERSION}/configure" \
 		--prefix=/tmp/install/gmp \
+		--host=x86_64-w64-mingw32 \
+		--enable-static \
+		--disable-shared && \
+	make "-j${CPU_CORES}" && \
+	make install
+
+# Cross-compile libMPFR for Windows with MinGW-w64
+RUN mkdir -p /tmp/build/mpfr && cd /tmp/build/mpfr && \
+	CC_FOR_BUILD="x86_64-linux-gnu-gcc" \
+	CPP_FOR_BUILD="x86_64-linux-gnu-cpp" \
+	"/tmp/src/mpfr-${MPFR_VERSION}/configure" \
+		--prefix=/tmp/install/mpfr \
+		--with-gmp=/tmp/install/gmp \
 		--host=x86_64-w64-mingw32 \
 		--enable-static \
 		--disable-shared && \
@@ -51,20 +83,28 @@ RUN mkdir -p /tmp/build/gmp && cd /tmp/build/gmp && \
 # - https://aur.archlinux.org/cgit/aur.git/tree/PKGBUILD?h=gdb-multiarch
 # - https://github.com/msys2/MINGW-packages/blob/master/mingw-w64-gdb/PKGBUILD)
 RUN mkdir -p /tmp/build/gdb && cd /tmp/build/gdb && \
+	CFLAGS="-O2 -g" CXXFLAGS="-O2 -g" \
+	CC_FOR_BUILD="x86_64-linux-gnu-gcc" \
+	CPP_FOR_BUILD="x86_64-linux-gnu-cpp" \
 	"/tmp/src/gdb-${GDB_VERSION}/configure" \
 		--prefix=/tmp/install/gdb \
 		--host=x86_64-w64-mingw32 \
 		--target=x86_64-w64-mingw32 \
 		--enable-targets=all \
-		--with-libgmp-prefix=/tmp/install/gmp \
+		--with-gmp=/tmp/install/gmp \
+		--with-mpfr=/tmp/install/mpfr \
 		--with-static-standard-libraries \
 		--enable-static \
 		--disable-shared \
 		--disable-ld \
 		--disable-gold \
-		--disable-sim && \
-	make "-j${CPU_CORES}" && \
-	make install
+		--disable-sim \
+		--disable-werror \
+		--disable-pgo-build \
+		--without-guile \
+		--without-python
+RUN cd /tmp/build/gdb && make "-j${CPU_CORES}"
+RUN cd /tmp/build/gdb && make install
 
 # Copy the GDB executable from the built files and strip away debug symbols to reduce the filesize
 RUN mkdir /tmp/dist && \
