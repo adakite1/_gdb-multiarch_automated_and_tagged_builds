@@ -25,6 +25,7 @@ mkdir -p /tmp/build/gdb && cd /tmp/build/gdb && \
 	"/tmp/src/gdb-${GDB_VERSION}/configure" \
 		--prefix=/tmp/install/gdb \
 		--enable-targets=all \
+		--target=arm-none-eabi \
 		--with-gmp=/tmp/install/gmp \
 		--with-mpfr=/tmp/install/mpfr \
 		--with-static-standard-libraries \
@@ -42,8 +43,6 @@ cd /tmp/build/gdb && make install
 
 # Copy the GDB executables from the built files and strip away debug symbols to reduce the filesize
 mkdir /tmp/dist && \
-	cp /tmp/install/gdb/bin/gdb /tmp/dist/gdb && \
-	cp /tmp/install/gdb/bin/gdbserver /tmp/dist/gdbserver && \
-	strip -s /tmp/dist/gdb && \
-	strip -s /tmp/dist/gdbserver
+	cp /tmp/install/gdb/bin/arm-none-eabi-gdb /tmp/dist/gdb && \
+	strip /tmp/dist/gdb
 
