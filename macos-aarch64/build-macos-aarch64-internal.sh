@@ -24,7 +24,7 @@ mkdir -p /tmp/build/gdb && cd /tmp/build/gdb && \
 	CFLAGS="-O2 -g" CXXFLAGS="-O2 -g" LDFLAGS="-static" \
 	"/tmp/src/gdb-${GDB_VERSION}/configure" \
 		LDFLAGS="-static -L/opt/homebrew/lib" \
-		LIBS="-lzstd -llzma -lintl" \
+		LIBS="-lzstd" \
 		--prefix=/tmp/install/gdb \
 		--enable-targets=all \
 		--target=arm-none-eabi \
