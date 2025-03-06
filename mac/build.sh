@@ -1,7 +1,7 @@
 #!/usr/bin/env zsh
 
 # Make all scripts in the current directory executable
-chmod +x ./*.sh
+find .. -name "*.sh" -type f -exec chmod +x {} +
 
 # Set environment variables
 . ../vars.sh
