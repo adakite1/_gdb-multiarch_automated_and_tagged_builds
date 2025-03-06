@@ -32,28 +32,24 @@ jobs:
       if: matrix.config.name == 'Linux/Windows'
       uses: actions/upload-artifact@v4
       with:
-        name: gdb-linux
         path: ${{ matrix.config.path }}/gdb-*-linux.zip
 
     - name: Upload Windows Build  
       if: matrix.config.name == 'Linux/Windows'
       uses: actions/upload-artifact@v4
       with:
-        name: gdb-windows
         path: ${{ matrix.config.path }}/gdb-*-mingw64.zip
 
     - name: Upload macOS Build
       if: matrix.config.name == 'macOS'
       uses: actions/upload-artifact@v4
       with:
-        name: gdb-macos
         path: ${{ matrix.config.path }}/gdb-*-mac.zip
     
     - name: Upload macOS Build (Intel)
       if: matrix.config.name == 'macOS'
       uses: actions/upload-artifact@v4
       with:
-        name: gdb-macos
         path: ${{ matrix.config.path }}/gdb-*-intel-mac.zip
 
     - name: Create Release
