@@ -64,3 +64,54 @@ jobs:
         name: ${{ github.ref_name }}
         files: |
           ${{ matrix.config.path }}/gdb-*.zip
+  
+  create-universal-binary:
+    name: Create macOS Universal Binary
+    needs: build  # This ensures the job runs after the build job completes
+    runs-on: macos-latest
+    if: success()
+    steps:
+      - name: Download amd64 artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: gdb-macos-amd64
+      
+      - name: Download aarch64 artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: gdb-macos-aarch64
+      
+      - name: Create Universal Binary
+        run: |
+          # Extract both zip files
+          unzip gdb-macos-amd64.zip
+          unzip gdb-macos-aarch64.zip
+
+          # Extract again
+          unzip gdb-*-macos-amd64.zip
+          mv gdb gdb-amd64
+          unzip -o gdb-*-macos-aarch64.zip
+          mv gdb gdb-aarch64
+          
+          # Create universal binary
+          lipo -create \
+            gdb-amd64 \
+            gdb-aarch64 \
+            -output gdb
+
+          # Create new zip with universal binary
+          VERSION=$(ls gdb-*-macos-amd64.zip | sed 's/.*gdb-\(.*\)-macos.*/\1/')
+          zip -r gdb-${VERSION}-macos-universal.zip gdb README.txt licenses/
+      
+      - name: Upload Universal Binary
+        uses: actions/upload-artifact@v4
+        with:
+          name: gdb-macos-universal
+          path: gdb-*-macos-universal.zip
+
+      - name: Add to Release
+        if: startsWith(github.ref, 'refs/tags/')
+        uses: softprops/action-gh-release@v2
+        with:
+          name: ${{ github.ref_name }}
+          files: gdb-*-macos-universal.zip
