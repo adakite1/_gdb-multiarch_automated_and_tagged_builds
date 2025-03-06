@@ -9,6 +9,7 @@ find .. -name "*.sh" -type f -exec chmod +x {} +
 export CPU_CORES=$(sysctl -n hw.logicalcpu)
 
 # Clear previous builds and get shared source files
+./get-deps.sh
 ../get-src.sh
 # Build
 ./build-mac-internal.sh
