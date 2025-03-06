@@ -8,7 +8,7 @@
     ./get.sh
 
     # Build
-    ./build-linux.sh
+    ./build-linux-internal.sh
 
     # Finish up
     ./finish.sh
@@ -23,7 +23,7 @@ mv "/tmp/dist/gdb-${GDB_VERSION}.zip" ./gdb-${GDB_VERSION}-linux.zip
     ./get.sh
 
     # Build
-    ./build-win.sh
+    ./build-win-internal.sh
 
     # Finish up
     ./finish.sh
