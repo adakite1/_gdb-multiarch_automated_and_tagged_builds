@@ -1,16 +1,13 @@
-#!/usr/bin/env zsh
-
-# Set architecture flags for universal binary
-export CFLAGS="-O2 -g -arch x86_64 -arch arm64"
-export CXXFLAGS="-O2 -g -arch x86_64 -arch arm64"
+#!/usr/bin/env bash
 
 # Compile libGMP
 mkdir -p /tmp/build/gmp && cd /tmp/build/gmp && \
+	CC_FOR_BUILD="x86_64-linux-gnu-gcc" \
+    CPP_FOR_BUILD="x86_64-linux-gnu-cpp" \
 	"/tmp/src/gmp-${GMP_VERSION}/configure" \
 		--prefix=/tmp/install/gmp \
 		--enable-static \
-		--disable-shared \
-        --host=x86_64-apple-darwin
+		--disable-shared
 cd /tmp/build/gmp && make "-j${CPU_CORES}"
 cd /tmp/build/gmp && make install
 

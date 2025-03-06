@@ -4,16 +4,15 @@
 chmod +x ./*.sh
 
 # Set environment variables
-. vars.sh
+. ../vars.sh
+# Determine the number of logical CPU cores the host system has
+export CPU_CORES=$(sysctl -n hw.logicalcpu)
 
 # Clear previous builds and get shared source files
-./get-src.sh
-
+../get-src.sh
 # Build
 ./build-mac-internal.sh
-
 # Finish up
-./finish.sh
-
+../finish.sh
 mv "/tmp/dist/gdb-${GDB_VERSION}.zip" ./gdb-${GDB_VERSION}-mac.zip
 

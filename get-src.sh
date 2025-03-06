@@ -1,5 +1,3 @@
-#!/usr/bin/env bash
-
 # Clean previous builds and remake the build folder
 rm -rf /tmp/build /tmp/dist /tmp/install
 mkdir /tmp/src
