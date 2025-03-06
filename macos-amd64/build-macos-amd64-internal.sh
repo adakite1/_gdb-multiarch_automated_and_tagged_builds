@@ -37,7 +37,8 @@ mkdir -p /tmp/build/gdb && cd /tmp/build/gdb && \
 		--disable-werror \
 		--disable-pgo-build \
 		--without-guile \
-		--without-python
+		--without-python \
+		--with-zstd=no
 cd /tmp/build/gdb && make "-j${CPU_CORES}"
 cd /tmp/build/gdb && make install
 
