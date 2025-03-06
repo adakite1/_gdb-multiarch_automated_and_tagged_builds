@@ -1,15 +1,32 @@
 #!/usr/bin/env bash
 
-# The versions of GDB and libGMP that we will build
-GDB_VERSION='16.2'
-GMP_VERSION='6.3.0'
-MPFR_VERSION='4.2.1'
+(
+    # Set environment variables
+    . vars.sh
 
-# Determine the number of logical CPU cores the host system has
-CPU_CORES=`lscpu -e=CORE | tail -n +2 | wc -l`
+    # Clear previous builds and get shared source files
+    ./get.sh
 
-# Perform the build, using all available CPU cores
-docker buildx build --progress=plain --build-arg "CPU_CORES=$CPU_CORES" --build-arg "GMP_VERSION=$GMP_VERSION" --build-arg "MPFR_VERSION=$MPFR_VERSION" --build-arg "GDB_VERSION=$GDB_VERSION" -t "gdb-cross-builder:$GDB_VERSION" .
+    # Build
+    ./build-linux.sh
 
-# Copy the built files to the host filesystem
-docker run --rm -ti -v "`pwd`:/hostdir" "gdb-cross-builder:$GDB_VERSION" cp "/tmp/dist/gdb-${GDB_VERSION}.zip" /hostdir/
+    # Finish up
+    ./finish.sh
+)
+mv "/tmp/dist/gdb-${GDB_VERSION}.zip" ./gdb-${GDB_VERSION}-linux.zip
+
+(
+    # Set environment variables
+    . vars.sh
+
+    # Clear previous builds and get shared source files
+    ./get.sh
+
+    # Build
+    ./build-win.sh
+
+    # Finish up
+    ./finish.sh
+)
+mv "/tmp/dist/gdb-${GDB_VERSION}.zip" ./gdb-${GDB_VERSION}-mingw64.zip
+
