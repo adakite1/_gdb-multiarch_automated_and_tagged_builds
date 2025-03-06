@@ -47,15 +47,15 @@ jobs:
       if: matrix.config.name == 'macOS (amd64)'
       uses: actions/upload-artifact@v4
       with:
-        name: gdb-mac-amd64
-        path: ${{ matrix.config.path }}/gdb-*-mac-amd64.zip
+        name: gdb-macos-amd64
+        path: ${{ matrix.config.path }}/gdb-*-macos-amd64.zip
     
     - name: Upload macOS Build (aarch64)
       if: matrix.config.name == 'macOS (aarch64)'
       uses: actions/upload-artifact@v4
       with:
-        name: gdb-mac-aarch64
-        path: ${{ matrix.config.path }}/gdb-*-mac-aarch64.zip
+        name: gdb-macos-aarch64
+        path: ${{ matrix.config.path }}/gdb-*-macos-aarch64.zip
 
     - name: Create Release
       if: startsWith(github.ref, 'refs/tags/')
