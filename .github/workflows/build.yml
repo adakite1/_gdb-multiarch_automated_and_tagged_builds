@@ -16,8 +16,8 @@ jobs:
       matrix:
         config:
           - { name: "Linux/Windows", os: "ubuntu-22.04", path: "linux" }
-          - { name: "macOS (amd64)", os: "macos-13", path: "mac" }
-          - { name: "macOS (aarch64)", os: "macos-latest", path: "mac" }
+          - { name: "macOS (amd64)", os: "macos-13", path: "mac-amd64" }
+          - { name: "macOS (aarch64)", os: "macos-latest", path: "mac-aarch64" }
 
     steps:
     - uses: actions/checkout@v4
