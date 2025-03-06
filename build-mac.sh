@@ -1,5 +1,8 @@
 #!/usr/bin/env zsh
 
+# Make all scripts in the current directory executable
+chmod +x ./*.sh
+
 # Set environment variables
 . vars.sh
 

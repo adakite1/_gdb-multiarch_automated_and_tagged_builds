@@ -1,5 +1,8 @@
 #!/usr/bin/env bash
 
+# Make all scripts in the current directory executable
+chmod +x ./*.sh
+
 # LINUX
 
 # Set environment variables
