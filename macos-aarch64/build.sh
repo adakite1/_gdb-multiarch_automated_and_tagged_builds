@@ -8,23 +8,12 @@ find .. -name "*.sh" -type f -exec chmod +x {} +
 # Determine the number of logical CPU cores the host system has
 export CPU_CORES=$(sysctl -n hw.logicalcpu)
 
-# APPLE SILICON
 # Clear previous builds and get shared source files
 ./get-deps.sh
 ../get-src.sh
 # Build
-./build-mac-internal.sh
+./build-macos-aarch64-internal.sh
 # Finish up
 ../finish.sh
-mv "/tmp/dist/gdb-${GDB_VERSION}.zip" ./gdb-${GDB_VERSION}-mac.zip
-
-# INTEL
-# Clear previous builds and get shared source files
-./get-deps.sh
-../get-src.sh
-# Build
-./build-intel-mac-internal.sh
-# Finish up
-../finish.sh
-mv "/tmp/dist/gdb-${GDB_VERSION}.zip" ./gdb-${GDB_VERSION}-intel-mac.zip
+mv "/tmp/dist/gdb-${GDB_VERSION}.zip" ./gdb-${GDB_VERSION}-macos-aarch64.zip
 

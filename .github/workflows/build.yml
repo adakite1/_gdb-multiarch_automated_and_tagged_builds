@@ -16,7 +16,8 @@ jobs:
       matrix:
         config:
           - { name: "Linux/Windows", os: "ubuntu-22.04", path: "linux" }
-          - { name: "macOS", os: "macos-latest", path: "mac" }
+          - { name: "macOS (amd64)", os: "macos-latest-large", path: "mac" }
+          - { name: "macOS (aarch64)", os: "macos-latest", path: "mac" }
 
     steps:
     - uses: actions/checkout@v4
@@ -42,19 +43,19 @@ jobs:
         name: gdb-windows
         path: ${{ matrix.config.path }}/gdb-*-mingw64.zip
 
-    - name: Upload macOS Build
-      if: matrix.config.name == 'macOS'
+    - name: Upload macOS Build (amd64)
+      if: matrix.config.name == 'macOS (amd64)'
       uses: actions/upload-artifact@v4
       with:
-        name: gdb-mac
-        path: ${{ matrix.config.path }}/gdb-*-mac.zip
+        name: gdb-mac-amd64
+        path: ${{ matrix.config.path }}/gdb-*-mac-amd64.zip
     
-    - name: Upload macOS Build (Intel)
-      if: matrix.config.name == 'macOS'
+    - name: Upload macOS Build (aarch64)
+      if: matrix.config.name == 'macOS (aarch64)'
       uses: actions/upload-artifact@v4
       with:
-        name: gdb-intel-mac
-        path: ${{ matrix.config.path }}/gdb-*-intel-mac.zip
+        name: gdb-mac-aarch64
+        path: ${{ matrix.config.path }}/gdb-*-mac-aarch64.zip
 
     - name: Create Release
       if: startsWith(github.ref, 'refs/tags/')
