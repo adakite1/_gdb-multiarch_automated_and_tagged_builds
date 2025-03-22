@@ -36,7 +36,8 @@ mkdir -p /tmp/build/gdb && cd /tmp/build/gdb && \
 		--enable-targets=all \
 		--with-gmp=/tmp/install/gmp \
 		--with-mpfr=/tmp/install/mpfr \
-		--with-expat=/tmp/install/expat \
+		--with-expat \
+		--with-libexpat-prefix=/tmp/install/expat \
 		--with-static-standard-libraries \
 		--enable-static \
 		--disable-shared \

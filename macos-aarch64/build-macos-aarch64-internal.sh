@@ -37,7 +37,8 @@ mkdir -p /tmp/build/gdb && cd /tmp/build/gdb && \
 		--target=arm-none-eabi \
 		--with-gmp=/tmp/install/gmp \
 		--with-mpfr=/tmp/install/mpfr \
-		--with-expat=/tmp/install/expat \
+		--with-expat \
+		--with-libexpat-prefix=/tmp/install/expat \
 		--enable-static \
 		--disable-shared \
 		--disable-gold \
