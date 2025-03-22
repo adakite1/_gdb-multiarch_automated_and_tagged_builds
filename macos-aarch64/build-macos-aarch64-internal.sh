@@ -48,7 +48,7 @@ mkdir -p /tmp/build/gdb && cd /tmp/build/gdb && \
 		--without-python \
 		--with-zstd=no \
 		--with-lzma=yes \
-		--enable-threading \
+		--enable-threading
 cd /tmp/build/gdb && make "-j${CPU_CORES}"
 cd /tmp/build/gdb && make install
 
