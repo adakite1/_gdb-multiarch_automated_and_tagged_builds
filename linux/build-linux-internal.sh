@@ -19,6 +19,15 @@ mkdir -p /tmp/build/mpfr && cd /tmp/build/mpfr && \
 cd /tmp/build/mpfr && make "-j${CPU_CORES}"
 cd /tmp/build/mpfr && make install
 
+# Compile libexpat
+mkdir -p /tmp/build/expat && cd /tmp/build/expat && \
+	"/tmp/src/expat-${EXPAT_VERSION}/configure" \
+		--prefix=/tmp/install/expat \
+		--enable-static \
+		--disable-shared
+cd /tmp/build/expat && make "-j${CPU_CORES}"
+cd /tmp/build/expat && make install
+
 # Compile GDB
 mkdir -p /tmp/build/gdb && cd /tmp/build/gdb && \
 	CFLAGS="-O2 -g" CXXFLAGS="-O2 -g" \
@@ -27,6 +36,7 @@ mkdir -p /tmp/build/gdb && cd /tmp/build/gdb && \
 		--enable-targets=all \
 		--with-gmp=/tmp/install/gmp \
 		--with-mpfr=/tmp/install/mpfr \
+		--with-expat=/tmp/install/expat \
 		--with-static-standard-libraries \
 		--enable-static \
 		--disable-shared \
@@ -36,7 +46,9 @@ mkdir -p /tmp/build/gdb && cd /tmp/build/gdb && \
 		--disable-werror \
 		--disable-pgo-build \
 		--without-guile \
-		--without-python
+		--without-python \
+		--with-lzma=yes \
+		--enable-threading \
 cd /tmp/build/gdb && make "-j${CPU_CORES}"
 cd /tmp/build/gdb && make install
 

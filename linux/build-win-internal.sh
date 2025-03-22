@@ -30,6 +30,18 @@ mkdir -p /tmp/build/mpfr && cd /tmp/build/mpfr && \
 cd /tmp/build/mpfr && make "-j${CPU_CORES}"
 cd /tmp/build/mpfr && make install
 
+# Cross-compile libexpat for Windows with MinGW-w64
+mkdir -p /tmp/build/expat && cd /tmp/build/expat && \
+	CC_FOR_BUILD="x86_64-linux-gnu-gcc" \
+    CPP_FOR_BUILD="x86_64-linux-gnu-cpp" \
+	"/tmp/src/expat-${EXPAT_VERSION}/configure" \
+		--prefix=/tmp/install/expat \
+		--host=x86_64-w64-mingw32 \
+		--enable-static \
+		--disable-shared
+cd /tmp/build/expat && make "-j${CPU_CORES}"
+cd /tmp/build/expat && make install
+
 # Cross-compile GDB for Windows with MinGW-w64, enabling multi-architecture support for debugging both Windows and Linux target applications
 # (See:
 # - https://stackoverflow.com/a/61363144
@@ -46,6 +58,7 @@ mkdir -p /tmp/build/gdb && cd /tmp/build/gdb && \
 		--enable-targets=all \
 		--with-gmp=/tmp/install/gmp \
 		--with-mpfr=/tmp/install/mpfr \
+		--with-expat=/tmp/install/expat \
 		--with-static-standard-libraries \
 		--enable-static \
 		--disable-shared \
@@ -55,7 +68,9 @@ mkdir -p /tmp/build/gdb && cd /tmp/build/gdb && \
 		--disable-werror \
 		--disable-pgo-build \
 		--without-guile \
-		--without-python
+		--without-python \
+		--with-lzma=yes \
+		--enable-threading \
 cd /tmp/build/gdb && make "-j${CPU_CORES}"
 cd /tmp/build/gdb && make install
 
