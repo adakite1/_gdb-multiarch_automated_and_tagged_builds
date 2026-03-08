@@ -42,6 +42,11 @@ mkdir -p /tmp/build/expat && cd /tmp/build/expat && \
 cd /tmp/build/expat && make "-j${CPU_CORES}"
 cd /tmp/build/expat && make install
 
+# Logging
+echo "Checkpoint 1"
+tree /tmp/install
+tree /tmp/build
+
 # Cross-compile GDB for Windows with MinGW-w64, enabling multi-architecture support for debugging both Windows and Linux target applications
 # (See:
 # - https://stackoverflow.com/a/61363144
@@ -72,6 +77,11 @@ mkdir -p /tmp/build/gdb && cd /tmp/build/gdb && \
 		--without-python
 cd /tmp/build/gdb && make "-j${CPU_CORES}"
 cd /tmp/build/gdb && make install
+
+# Logging
+echo "Checkpoint 2"
+tree /tmp/install
+tree /tmp/build
 
 # Copy the GDB executables from the built files and strip away debug symbols to reduce the filesize
 mkdir /tmp/dist && \

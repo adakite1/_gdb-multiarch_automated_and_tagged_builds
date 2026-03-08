@@ -13,4 +13,5 @@ sudo apt-get update && sudo apt-get install -y --no-install-recommends \
     flex \
     bison \
     libiconv-hook-dev \
-    libc6-dev
+    libc6-dev \
+    tree

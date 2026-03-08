@@ -15,7 +15,8 @@ brew install \
     isl \
     zstd \
     xz \
-    gettext
+    gettext \
+    tree
 brew reinstall --build-from-source zstd
 brew reinstall --build-from-source xz
 brew reinstall --build-from-source gettext
