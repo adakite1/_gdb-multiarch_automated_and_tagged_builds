@@ -15,9 +15,9 @@ jobs:
     strategy:
       matrix:
         config:
-          - { name: "Linux/Windows", os: "ubuntu-latest", path: "linux" }
-          - { name: "macOS (amd64)", os: "macos-26-intel", path: "macos-amd64" }
-          - { name: "macOS (aarch64)", os: "macos-latest", path: "macos-aarch64" }
+          - { name: "Linux/Windows", os: "ubuntu-22.04", path: "linux" }
+          - { name: "macOS (amd64)", os: "macos-15-intel", path: "macos-amd64" }
+          - { name: "macOS (aarch64)", os: "macos-15", path: "macos-aarch64" }
 
     steps:
     - uses: actions/checkout@v4
