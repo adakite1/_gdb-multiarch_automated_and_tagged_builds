@@ -5,7 +5,8 @@ mkdir -p /tmp/build/gmp && cd /tmp/build/gmp && \
 	"/tmp/src/gmp-${GMP_VERSION}/configure" \
 		--prefix=/tmp/install/gmp \
 		--enable-static \
-		--disable-shared
+		--disable-shared \
+		ABI=64
 cd /tmp/build/gmp && make "-j${CPU_CORES}"
 cd /tmp/build/gmp && make install
 
