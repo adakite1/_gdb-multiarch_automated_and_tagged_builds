@@ -6,6 +6,7 @@ mkdir -p /tmp/build/gmp && cd /tmp/build/gmp && \
 		--prefix=/tmp/install/gmp \
 		--enable-static \
 		--disable-shared \
+		--disable-assembly \
 		ABI=64
 cd /tmp/build/gmp && make "-j${CPU_CORES}"
 cd /tmp/build/gmp && make install
