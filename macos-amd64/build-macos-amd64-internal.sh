@@ -31,9 +31,6 @@ cd /tmp/build/expat && make install
 
 # Logging
 echo "Checkpoint 1"
-file /tmp/install/gmp/lib/libgmp.a
-file /tmp/install/mpfr/lib/libmpfr.a
-file /tmp/install/expat/lib/libexpat.a
 tree /tmp/install
 tree /tmp/build
 
@@ -64,9 +61,22 @@ cd /tmp/build/gdb && make install
 
 # Logging
 echo "Checkpoint 2"
-file /tmp/install/gmp/lib/libgmp.a
-file /tmp/install/mpfr/lib/libmpfr.a
-file /tmp/install/expat/lib/libexpat.a
+# What architecture are the libraries actually built for
+lipo -info /tmp/install/gmp/lib/libgmp.a
+lipo -info /tmp/install/mpfr/lib/libmpfr.a
+lipo -info /tmp/install/expat/lib/libexpat.a
+# What compiler is GDB's configure actually using
+grep "^CC=" /tmp/build/gdb/config.log | head -5
+grep "^CFLAGS=" /tmp/build/gdb/config.log | head -5
+# The GMP test failure if any
+grep -B 5 -A 30 "checking for the correct version of the gmp" /tmp/build/gdb/config.log
+# Also check if configure even found the headers/libs
+grep -A 10 "gmp\.h" /tmp/build/gdb/config.log
+grep -A 10 "lgmp" /tmp/build/gdb/config.log
+# What the host compiler targets by default
+cc -dumpmachine
+cc -v 2>&1 | tail -5
+# Tree of built files
 tree /tmp/install
 tree /tmp/build
 
